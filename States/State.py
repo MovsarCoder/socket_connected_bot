@@ -1,0 +1,16 @@
+from aiogram.fsm.state import State, StatesGroup
+class Reg(StatesGroup):
+    connected_ip = State()
+    connected_port = State()
+
+    # name = State()
+    # id_player = State()
+    # fisrt_name = State()
+    # sign_up_people = State()
+    # last_name = State()
+    # email = State()
+    # telephone = State()
+
+class ConnectionStates(StatesGroup):
+    connected = State()
+    waiting_for_stop = State()
