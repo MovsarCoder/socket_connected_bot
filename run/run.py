@@ -7,7 +7,6 @@ from allFunctions import router
 from bot_started_commands.bot_commands import commands
 from config.get_token import TOKEN
 
-
 async def main():
     bot = Bot(token=TOKEN)
 

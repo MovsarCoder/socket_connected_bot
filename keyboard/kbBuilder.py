@@ -16,7 +16,8 @@ def make_row_keyboards(items: List[str]) -> ReplyKeyboardMarkup:
 
 def make_row_inline_keyboards(items: List[Tuple[str, str]]) -> InlineKeyboardMarkup:
     """
-    :param
+
+    :param items:
     :return:
     """
     # Создаем список для хранения строк клавиатуры

@@ -6,6 +6,7 @@ from allFunctions.functions.generate_uqinue_id import generate_password
 from database.db import insertIntoToTable, user_exists
 import datetime
 from keyboard.kbBuilder import make_row_keyboards
+from keyboard.list_keyboards_info import main_keyboard
 
 router = Router()
 
@@ -16,17 +17,10 @@ async def get_name_func(message: Message, state: FSMContext):
     id_player = message.from_user.id
 
     # Список из всех доступных кнопок
-    keyboard = [
-        'ℹ️ Личная информация',
-        '⚙️ Моя OC (Операционная Система)',
-        '👨‍💻 Тех. Поддержка.',
-        '📝 Получить Builder',
-        '📴 Закрыть соединение с 🖥️', '🔛 Подключиться к 🖥️'
-    ]
 
     # Проверяем, существует ли пользователь в базе данных
     if user_exists(id_player):
-        await message.reply("Привет. У нас все как обычно! Список всех доступных функций бота /help", reply_markup=make_row_keyboards(keyboard))
+        await message.reply("Привет. У нас все как обычно! Список всех доступных функций бота /help", reply_markup=make_row_keyboards(main_keyboard))
         return  # Если пользователь уже существует, ничего не делаем
 
     # Если пользователь не существует в базе данных
