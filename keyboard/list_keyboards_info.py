@@ -19,10 +19,10 @@ connected_keyboard = [
 ]
 
 keyboard_check_is_control = [
+    ("Назад", "back_data"),
     ("Управление браузером", "control_browser"),
     ("Управление Youtube", "control_youtube"),
     ("Управление Компьютером", "control_pc"),
-    ("Назад", "back_data"),
 ]
 
 keyboard_control_pc = [
@@ -39,5 +39,5 @@ keyboard_control_pc = [
     ("Очистить корзину", "clear_сart"),
     ("Вебкамера", "camera_data"),
     ("Спам на почту", "activated_spam_data"),
-    ("Включить/Выключить звук Компьюьтера", "turn_on_and_off_volume"),
+    ("Включить/Выключить звук Компьютера", "turn_on_and_off_volume"),
 ]
