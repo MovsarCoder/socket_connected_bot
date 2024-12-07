@@ -8,4 +8,8 @@ router = Router()
 
 @router.callback_query(F.data == 'back_data')
 async def back(callback: CallbackQuery):
-    await callback.message.edit_text('Выберите функцию', reply_markup=make_row_inline_keyboards(keyboard_check_is_control))
+    try:
+        await callback.message.edit_text('Выберите функцию', reply_markup=make_row_inline_keyboards(keyboard_check_is_control))
+
+    except Exception as e:
+        await callback.message.answer('Произошла непредвиденная ошибка')

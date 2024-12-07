@@ -1,20 +1,28 @@
-import asyncio
-from aiogram import F, Router
-from aiogram.fsm.context import FSMContext
+from keyboard.list_keyboards_info import connected_keyboard, keyboard_control_pc, keyboard_check_is_control, keyboard_control_youtube
+from keyboard.kbBuilder import make_row_inline_keyboards
 from aiogram.types import Message, CallbackQuery
+from aiogram.fsm.context import FSMContext
+from aiogram import F, Router
 from States.State import Reg
 import socket
-from keyboard.kbBuilder import make_row_inline_keyboards
-from keyboard.list_keyboards_info import connected_keyboard, keyboard_control_pc, keyboard_check_is_control
 
 router = Router()
 global_data_store = {}
 client = None
 
-
-async def send_messages():
-    while True:
-        await asyncio.sleep(0.1)
+"""
+# @router.message(Form.connected)
+# async def send_message(message: Message, ):
+#     global client
+#     if client:
+#         try:
+#             client.send(message.text.encode())
+#             await message.answer(f'Сообщение отправлено: {message.text}')
+#         except Exception as e:
+#             await message.answer(f'Ошибка при отправке сообщения: {e}')
+#     else:
+#         await message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+"""
 
 
 async def check_input_type(text):
@@ -25,7 +33,6 @@ async def check_input_type(text):
 @router.message(F.text == '🔛 Подключиться к 🖥️')
 async def connected_ip(message: Message, state: FSMContext):
     await state.clear()
-
     await message.answer('Введите IP который вам отправился: ')
     await state.set_state(Reg.connected_ip)
 
@@ -33,7 +40,6 @@ async def connected_ip(message: Message, state: FSMContext):
 @router.message(Reg.connected_ip)
 async def connected_ip_fsm(message: Message, state: FSMContext):
     await state.update_data(ip=message.text)
-
     await message.answer('Отлично! Введите порт: ')
     await state.set_state(Reg.connected_port)
 
@@ -44,12 +50,8 @@ async def connected_port(message: Message, state: FSMContext):
 
     if await check_input_type(get_port):
         await state.update_data(port=get_port)
-
-        # Создаем список содержащий кортеж из двух элементов для дальнейшего составления inline-keyboard из этих данных
-        # [("Название кнопки", "callback_data для взаимодействия с кнопкой")]
-
-        # Получаем дату (информацию с состояний)
         get_data = await state.get_data()
+
         # Сохраняем данные в глобальном словаре
         global_data_store[message.from_user.id] = {
             "ip": f"{get_data['ip']}",
@@ -58,8 +60,6 @@ async def connected_port(message: Message, state: FSMContext):
 
         data_info = global_data_store[message.from_user.id]
         await message.answer(f'IP: {data_info.get("ip")}\nPORT: {data_info.get("port")}', reply_markup=make_row_inline_keyboards(connected_keyboard))
-
-        # Не очищаем состояние здесь, оставляем его для обработки callback
         await state.clear()
 
     else:
@@ -78,17 +78,11 @@ async def connect_data_func(callback: CallbackQuery):
         data_info = global_data_store[user_id]
         await callback.message.edit_text(f"Подключение к {data_info.get('ip')} на порту {data_info.get('port')}...")
 
-        # Имитируем подключение к серверу
-        await asyncio.sleep(5)
-
         # Если данные успешны, то подключаемся
         try:
-            # Подключение по сокетам к IP
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((data_info.get('ip'), data_info.get('port')))
             await callback.message.edit_text('Вы успешно подключились!', reply_markup=make_row_inline_keyboards(keyboard_check_is_control))
-            # Устанавливаем состояние
-            # await state.set_state(Form.connected)
         # При возникновении непредвиденных ошибок
         except Exception as e:
             await callback.message.edit_text(f'Ошибка подключения: {e}')
@@ -97,19 +91,37 @@ async def connect_data_func(callback: CallbackQuery):
         await callback.message.edit_text('Данные подключения недоступны. Пожалуйста, попробуйте снова.')
 
 
+# Закрыть соединение с компьютером
+@router.message(F.text == "📴 Закрыть соединение с 🖥️")
+async def disconnect_handler(message: Message, state: FSMContext):
+    await state.clear()
+    global client
+    if client:
+        client.close()
+        await message.answer('Вы отключены от сервера.')
+    else:
+        await message.answer('Вы не подключены к серверу.')
+
+
+################################################################## Все функции для управления компьютера
+
+# Функция для вывода клавиатуры с управлением пк
 @router.callback_query(F.data == 'control_pc')
 async def control_pc_func(callback: CallbackQuery):
-    # Выключаем свечение кнопки
     await callback.answer('')
-    # Создаем список из кортежей с кнопками и датами
-    # asyncio.create_task(send_messages())
-
-    # Редактируем прошлую клавиатуру на новую
     await callback.message.edit_text('Успешно! Доступный функционал компьютера: ', reply_markup=make_row_inline_keyboards(keyboard_control_pc))
 
 
+# Выключение пк
 @router.callback_query(F.data == 'shutdown_data')
 async def shutdown_data(callback: CallbackQuery):
+    """
+    Данная функция отправляет сообщение на компьютер к которому мы подключились с помощью сокетов.
+     Функция называется shutdown (Выключить компьютер).
+      На стороне клиента эта функция уже обрабатывает функцию выключение компьютера.
+      Тем самым мы можем удаленно выключить компьютер любого человека.
+    """
+
     await callback.answer('')
     global client
 
@@ -122,25 +134,61 @@ async def shutdown_data(callback: CallbackQuery):
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
 
-# @router.message(Form.connected)
-# async def send_message(message: Message, ):
-#     global client
-#     if client:
-#         try:
-#             client.send(message.text.encode())
-#             await message.answer(f'Сообщение отправлено: {message.text}')
-#         except Exception as e:
-#             await message.answer(f'Ошибка при отправке сообщения: {e}')
-#     else:
-#         await message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
 
-# @router.message(F.text == "📴 Закрыть соединение с 🖥️")
-# async def disconnect_handler(message: Message, state: FSMContext):
-#     await state.clear()
-#     global client
-#     if client:
-#         client.close()
-#         await message.answer('Вы отключены от сервера.')
-#         await state.clear()  # Завершаем состояние
-#     else:
-#         await message.answer('Вы не подключены к серверу.')
+# Перезагрузка пк
+@router.callback_query(F.data == 'reload_data')
+async def restart_data(callback: CallbackQuery):
+    """
+    Данная функция отправляет сообщение на компьютер к которому мы подключились с помощью сокетов.
+     Функция называется restart (Перезагрузить компьютер).
+      На стороне клиента эта функция уже обрабатывает функцию перезагрузки компьютера.
+      Тем самым мы можем удаленно перезагрузить компьютер любого человека.
+    """
+
+    await callback.answer('')
+    global client
+
+    if client:
+        try:
+            await callback.message.answer('Компьютер успешно перезагружен.')
+            client.send('restart'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+################################################################## Все функции для управления Youtube
+
+
+# Клавиатура с функционалом для управления Youtube
+@router.callback_query(F.data == 'control_youtube')
+async def control_youtube_keyboard(callback: CallbackQuery):
+    """
+
+    :param callback:
+    :return:
+    """
+    await callback.answer('')
+
+    await callback.message.edit_text('Доступный функционал использования программы Youtube: ', reply_markup=make_row_inline_keyboards(keyboard_control_youtube))
+
+
+# Функция для открытия Youtube
+@router.callback_query(F.data == 'open_youtube_data')
+async def open_youtube_func(callback: CallbackQuery):
+    """
+
+    :param callback:
+    :return:
+    """
+
+    await callback.answer('')
+    if client:
+        try:
+            await callback.message.answer('Youtube успешно открыт.')
+            client.send('youtube'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
