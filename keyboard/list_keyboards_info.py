@@ -30,6 +30,7 @@ keyboard_control_pc = [
     ("Перезагрузка", "reload_data"),
     ("Блокировка экрана", "lock_screen_data"),
     ("Вызвать синий экран смерти", "blue_screen_of_dead"),
+    ("Открывание BSOD картин в браузере", "bsod_screen_brows_data"),
     ("Сменить язык", "change_language_data"),
     ("Скриншот", "screenshot_screen_data"),
     ("Свернуть все окна", "minimize_all_windows_data"),
