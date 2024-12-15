@@ -8,9 +8,8 @@ def make_row_keyboards(items: List[str]) -> ReplyKeyboardMarkup:
     :return:
     """
     # Создаем основной список кнопок
-    keyboard = [[KeyboardButton(text=item)] for item in items[:-2]]  # Все, кроме последних двух
+    keyboard = [[KeyboardButton(text=item)] for item in items]
     # Добавляем последние две кнопки в одном ряду
-    keyboard.append([KeyboardButton(text=items[-2]), KeyboardButton(text=items[-1])])
     return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
 
 

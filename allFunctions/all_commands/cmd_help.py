@@ -10,5 +10,7 @@ async def cmd_help(message: Message):
     Все доступные функции бота: \n
     /start - Перезагрузка бота \n
     /help - Информация о боте \n
+    /profile - Ваша личная информация \n
+    /admin_panel - Админ панель \n
     """
     await message.answer(a)

