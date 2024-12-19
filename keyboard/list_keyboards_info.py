@@ -43,22 +43,38 @@ keyboard_check_is_control = [
 
 keyboard_control_pc = [
     ("Назад", "back_data"),
+    ("Очистить корзину", "clear_сart"),
     ("Завершение работы", "shutdown_data"),
     ("Перезагрузка", "reload_data"),
     ("Блокировка экрана", "lock_screen_data"),
     ("Открывание BSOD картин в браузере", "bsod_screen_brows_data"),
     ("Вызвать синий экран смерти", "blue_screen_of_dead"),
-    ("Сменить язык", "change_language_data"),
-    ("Скриншот", "screenshot_screen_data"),
-    ("Фотография пользователя", "screenshot_user"),
-    ("Свернуть все окна", "minimize_all_windows_data"),
+    ("Фотография пользователя", "screenshot_user_data"),
+    ("Скриншот рабочего стола", "screenshot_screen_data"),
+    ("Запись рабочего стола", "recording_screen_data"),
+    ("Свернуть все окна", "hide_all_windows_data"),
+    ("Установить максимальную громкость", "max_volume_data"),
+    ("Сример звуком", "screamer_song_data"),
+    ("Управление мышкой", "control_mouse_data"),
+    ("Состояние комплектующих", "system_info_data"),
+    ("Включить/Выключить звук Компьютера", "turn_on_and_off_volume"),
+    ("Выполнить команду", "send_command_data"),
+]
+
+screen_recording_keyboard = [
+    ("Начать запись", "start_record_data"),
+    ("Остановить запись", "stop_record_data"),
+]
+
+random_cursor_keyboard = [
+    ("Включить перемещение курсора", "random_cursor_start_data"),
+    ("Остановить перемещение курсора", "random_cursor_stop_data"),
     ("Scroll верх", "scroll_up_data"),
     ("Scroll вниз", "scroll_down_data"),
-    ("Очистить корзину", "clear_сart"),
-    ("Включить/Выключить звук Компьютера", "turn_on_and_off_volume"),
 ]
 
 # ("Камера", "camera_data"),
+# ("Сменить язык", "change_language_data"),
 
 keyboard_control_youtube = [
     ("Назад", "back_data"),
