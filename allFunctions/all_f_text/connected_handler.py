@@ -364,7 +364,7 @@ async def random_cursor_start_data_func(callback: CallbackQuery):
     if client:
         try:
             client.send('random_cursor_start_data'.encode())
-            await callback.message.answer('Случайное перемещение курсора - Начато! Чтобы остановить перемещение, нажмите "Остановить перемещение"', reply_markup=random_cursor_keyboard)
+            await callback.message.answer('Случайное перемещение курсора - Начато! Чтобы остановить перемещение, нажмите "Остановить перемещение"', reply_markup=make_row_inline_keyboards(random_cursor_keyboard))
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
@@ -400,6 +400,30 @@ async def system_info_data_func(callback: CallbackQuery):
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
 
+
+@router.callback_query(F.data == 'turn_on_and_off_volume')
+async def turn_on_and_off_volume_func(callback: CallbackQuery):
+    """"""
+    await callback.answer('')
+    global client
+
+    if client:
+        try:
+            client.send('turn_on_and_off_volume'.encode())
+            await callback.message.answer('Действие успешно обработано, звук Включен/Выключен.')
+
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+@router.callback_query(F.data == 'send_command_data')
+async def send_command_data_func(callback: CallbackQuery):
+    """"""
+
+    await callback.answer('Функция не работает!')
+    await callback.message.answer('Функция не работает!')
 
 ################################################################## Все функции для управления Youtube
 
