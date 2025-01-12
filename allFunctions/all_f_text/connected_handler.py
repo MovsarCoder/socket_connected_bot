@@ -1,10 +1,18 @@
-from keyboard.list_keyboards_info import connected_keyboard, keyboard_control_pc, keyboard_check_is_control, keyboard_control_youtube, screen_recording_keyboard, random_cursor_keyboard
 from keyboard.kbBuilder import make_row_inline_keyboards
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram import F, Router
 from States.State import Reg
 import socket
+
+from keyboard.list_keyboards_info import (
+    connected_keyboard,
+    keyboard_control_pc,
+    keyboard_check_is_control,
+    keyboard_control_youtube,
+    screen_recording_keyboard,
+    random_cursor_keyboard,
+    keyboard_control_browser)
 
 router = Router()
 global_data_store = {}
@@ -87,6 +95,9 @@ async def disconnect_handler(message: Message, state: FSMContext):
         await message.answer('Вы отключены от сервера.')
     else:
         await message.answer('Вы не подключены к серверу.')
+
+
+
 
 
 ################################################################## Все функции для управления компьютера
@@ -440,3 +451,12 @@ async def open_youtube_func(callback: CallbackQuery):
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# ---------------------------------------------------------- Отдел управления браузером
+
+@router.callback_query(F.data == 'control_browser')
+async def control_browser_show_keyboard_func(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+
+    await callback.message.edit_text('Доступный функционал управления Браузером', reply_markup=make_row_inline_keyboards(keyboard_control_browser))
