@@ -100,6 +100,7 @@ keyboard_control_youtube = [
 # ---------------------------------------------------------- Отдел клавиатур "Управления Браузером"
 
 keyboard_control_browser = [
+    ("Назад", "back_data"),
     ("Chrome", "chrome_data"),
     ("Github", "github_data"),
     ("Binance", "binance_data"),

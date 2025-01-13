@@ -70,13 +70,13 @@ async def connect_data_func(callback: CallbackQuery):
     # Если пользователь с user_id присутствует в словаре
     if user_id in global_data_store:
         data_info = global_data_store[user_id]
-        await callback.message.edit_text(f"Подключение к {data_info.get('ip')} на порту {data_info.get('port')}...")
+        await callback.message.answer(f"Подключение к {data_info.get('ip')} на порту {data_info.get('port')}...")
 
         # Если данные успешны, то подключаемся
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((data_info.get('ip'), data_info.get('port')))
-            await callback.message.edit_text('Вы успешно подключились!', reply_markup=make_row_inline_keyboards(keyboard_check_is_control))
+            await callback.message.answer('Вы успешно подключились!', reply_markup=make_row_inline_keyboards(keyboard_check_is_control))
         # При возникновении непредвиденных ошибок
         except Exception as e:
             await callback.message.answer(f'Ошибка подключения: {e}')
@@ -456,7 +456,24 @@ async def open_youtube_func(callback: CallbackQuery):
 # ---------------------------------------------------------- Отдел управления браузером
 
 @router.callback_query(F.data == 'control_browser')
-async def control_browser_show_keyboard_func(callback: CallbackQuery, state: FSMContext):
+async def control_browser_show_keyboard_func(callback: CallbackQuery):
     await callback.answer()
 
     await callback.message.edit_text('Доступный функционал управления Браузером', reply_markup=make_row_inline_keyboards(keyboard_control_browser))
+
+
+# Handler для открытия Chrome
+@router.callback_query(F.data == 'chrome_data')
+async def open_chrome_func(callback: CallbackQuery):
+    await callback.answer('')
+    global client
+
+    if client:
+        try:
+            await callback.message.answer('Браузер Chrome успешно открыт!')
+            client.send('chrome'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
