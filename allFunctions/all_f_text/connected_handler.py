@@ -97,16 +97,31 @@ async def disconnect_handler(message: Message, state: FSMContext):
         await message.answer('Вы не подключены к серверу.')
 
 
+# ---------------------------------------------------------- Все функции для управления компьютера
 
-
-
-################################################################## Все функции для управления компьютера
 
 # Функция для вывода клавиатуры с управлением пк
 @router.callback_query(F.data == 'control_pc')
 async def control_pc_func(callback: CallbackQuery):
     await callback.answer('')
     await callback.message.edit_text('Успешно! Доступный функционал компьютера: ', reply_markup=make_row_inline_keyboards(keyboard_control_pc))
+
+
+# Функция для очистки корзины на компьютере
+@router.callback_query(F.data == 'clear_сart')
+async def clear_cart(callback: CallbackQuery):
+    await callback.answer()
+    global client
+
+    if client:
+        try:
+            await callback.message.answer('Корзина успешно очищена!')
+            client.send('clear_сart'.encode())
+        except Exception as e:
+            await callback.message.answer(f"Ошибка при отправке сообщения: {e}")
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
 
 
 # Выключение пк
@@ -427,7 +442,7 @@ async def send_command_data_func(callback: CallbackQuery):
     await callback.message.answer('Функция не работает!')
 
 
-################################################################## Все функции для управления Youtube
+# ---------------------------------------------------------- Все функции для управления Youtube
 
 
 # Клавиатура с функционалом для управления Youtube

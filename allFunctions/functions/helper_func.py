@@ -1,7 +1,7 @@
 import json
 
-admin_list = '../database/admin_list.txt'
-player_data = '../database/players_list_db.txt'
+admin_list = '../database/templates/admin_list.txt'
+player_data = '../database/templates/players_list_db.txt'
 
 
 def get_anonim(id):
