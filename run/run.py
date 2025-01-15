@@ -21,7 +21,6 @@ async def main():
 
     await bot.set_my_commands(commands=commands, scope=BotCommandScopeAllPrivateChats())
 
-
 if __name__ == "__main__":
 
     try:
