@@ -123,7 +123,6 @@ async def clear_cart(callback: CallbackQuery):
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
 
 
-
 # Выключение пк
 @router.callback_query(F.data == 'shutdown_data')
 async def shutdown_data(callback: CallbackQuery):
@@ -540,6 +539,23 @@ async def open_bybit_func(callback: CallbackQuery):
         try:
             await callback.message.answer('Bybit успешно открыт!')
             client.send('bybit'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Handler для открытия Telegram
+@router.callback_query(F.data == 'telegram_data')
+async def open_telegram_func(callback: CallbackQuery):
+    await callback.answer()
+
+    global client
+
+    if client:
+        try:
+            await callback.message.answer('Telegram успешно открыт!')
+            client.send('telegram'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
