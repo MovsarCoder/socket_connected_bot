@@ -560,3 +560,20 @@ async def open_telegram_func(callback: CallbackQuery):
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Handler для открытия Discord
+@router.callback_query(F.data == 'discord_data')
+async def open_discord_func(callback: CallbackQuery):
+    await callback.answer()
+
+    global client
+
+    if client:
+        try:
+            await callback.message.answer('Discord успешно открыт!')
+            client.send('discord'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
