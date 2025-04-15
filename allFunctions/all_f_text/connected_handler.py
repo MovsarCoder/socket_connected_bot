@@ -53,7 +53,9 @@ async def connected_port(message: Message, state: FSMContext):
         }
 
         data_info = global_data_store[message.from_user.id]
-        await message.answer(f'IP: {data_info.get("ip")}\nPORT: {data_info.get("port")}', reply_markup=make_row_inline_keyboards(connected_keyboard))
+        await message.answer(f'IP: {data_info.get("ip")}\n'
+                             f'PORT: {data_info.get("port")}',
+                             reply_markup=make_row_inline_keyboards(connected_keyboard))
         await state.clear()
 
     else:
@@ -76,7 +78,8 @@ async def connect_data_func(callback: CallbackQuery):
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((data_info.get('ip'), data_info.get('port')))
-            await callback.message.answer('Вы успешно подключились!', reply_markup=make_row_inline_keyboards(keyboard_check_is_control))
+            await callback.message.answer('Вы успешно подключились!',
+                                          reply_markup=make_row_inline_keyboards(keyboard_check_is_control))
         # При возникновении непредвиденных ошибок
         except Exception as e:
             await callback.message.answer(f'Ошибка подключения: {e}')
@@ -104,7 +107,8 @@ async def disconnect_handler(message: Message, state: FSMContext):
 @router.callback_query(F.data == 'control_pc')
 async def control_pc_func(callback: CallbackQuery):
     await callback.answer('')
-    await callback.message.edit_text('Успешно! Доступный функционал компьютера: ', reply_markup=make_row_inline_keyboards(keyboard_control_pc))
+    await callback.message.edit_text('Успешно! Доступный функционал компьютера: ',
+                                     reply_markup=make_row_inline_keyboards(keyboard_control_pc))
 
 
 # Функция для очистки корзины на компьютере
@@ -290,7 +294,8 @@ async def record_screen_data(callback: CallbackQuery):
     # К имеющейся клавиатуре добавляет новую кнопку "Назад"
     add_back_data_keyboard = [("Назад", "back_data")] + screen_recording_keyboard
     await callback.answer("")
-    await callback.message.answer("Выберите опцию: ", reply_markup=make_row_inline_keyboards(add_back_data_keyboard))
+    await callback.message.answer("Выберите опцию: ",
+                                  reply_markup=make_row_inline_keyboards(add_back_data_keyboard))
 
 
 @router.callback_query(F.data == 'start_record_data')
@@ -299,7 +304,8 @@ async def start_record_func(callback: CallbackQuery):
     if client:
         try:
             client.send('start_record_data'.encode())
-            await callback.message.answer('Чтобы остановить запись достаточно нажать на кнопку "Остановить запись"', reply_markup=make_row_inline_keyboards(screen_recording_keyboard))
+            await callback.message.answer('Чтобы остановить запись достаточно нажать на кнопку "Остановить запись"',
+                                          reply_markup=make_row_inline_keyboards(screen_recording_keyboard))
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
@@ -383,7 +389,8 @@ async def control_mouse_data(callback: CallbackQuery):
     """"""
     # К имеющейся клавиатуре добавляю кнопку "Назад"
     keyboard = [("Назад", "back_data")] + random_cursor_keyboard
-    await callback.message.answer('Какое действие вы хотите совершить с мышкой?', reply_markup=make_row_inline_keyboards(keyboard))
+    await callback.message.answer('Какое действие вы хотите совершить с мышкой?',
+                                  reply_markup=make_row_inline_keyboards(keyboard))
 
 
 @router.callback_query(F.data == 'random_cursor_start_data')
@@ -477,7 +484,8 @@ async def open_youtube_func(callback: CallbackQuery):
 async def control_browser_show_keyboard_func(callback: CallbackQuery):
     await callback.answer()
 
-    await callback.message.edit_text('Доступный функционал управления Браузером', reply_markup=make_row_inline_keyboards(keyboard_control_browser))
+    await callback.message.edit_text('Доступный функционал управления Браузером',
+                                     reply_markup=make_row_inline_keyboards(keyboard_control_browser))
 
 
 # Handler для открытия Chrome
@@ -589,6 +597,22 @@ async def open_discord_func(callback: CallbackQuery):
         try:
             await callback.message.answer('Steam успешно открыт!')
             client.send('steam'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Handler для открытия Spotify
+@router.callback_query(F.data == 'spotify_data')
+async def open_spofity_func(callback: CallbackQuery):
+    await callback.answer()
+
+    global client
+    if client:
+        try:
+            await callback.message.answer('Steam успешно открыт!')
+            client.send('spotify_data'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
