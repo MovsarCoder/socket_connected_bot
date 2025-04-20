@@ -617,3 +617,19 @@ async def open_spofity_func(callback: CallbackQuery):
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Handler для открытия Facebook
+@router.callback_query(F.data == 'facebook_data')
+async def open_spofity_func(callback: CallbackQuery):
+    await callback.answer()
+
+    global client
+    if client:
+        try:
+            await callback.message.answer('Steam успешно открыт!')
+            client.send('facebook'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
