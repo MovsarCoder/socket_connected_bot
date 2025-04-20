@@ -633,3 +633,51 @@ async def open_spofity_func(callback: CallbackQuery):
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Handler для открытия Twitter
+@router.callback_query(F.data == 'x_twitter_data')
+async def open_spofity_func(callback: CallbackQuery):
+    await callback.answer()
+
+    global client
+    if client:
+        try:
+            await callback.message.answer('Steam успешно открыт!')
+            client.send('twitter'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Handler для открытия Instagram
+@router.callback_query(F.data == 'instagram_data')
+async def open_spofity_func(callback: CallbackQuery):
+    await callback.answer()
+
+    global client
+    if client:
+        try:
+            await callback.message.answer('Steam успешно открыт!')
+            client.send('instagram'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
+
+# Handler для открытия Whatsapp
+@router.callback_query(F.data == 'whatsapp_data')
+async def open_spofity_func(callback: CallbackQuery):
+    await callback.answer()
+
+    global client
+    if client:
+        try:
+            await callback.message.answer('Steam успешно открыт!')
+            client.send('whatsapp'.encode())
+        except Exception as e:
+            await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
+    else:
+        await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
