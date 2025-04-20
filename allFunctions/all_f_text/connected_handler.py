@@ -611,7 +611,7 @@ async def open_spofity_func(callback: CallbackQuery):
     global client
     if client:
         try:
-            await callback.message.answer('Steam успешно открыт!')
+            await callback.message.answer('Spofity успешно открыт!')
             client.send('spotify_data'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
@@ -627,7 +627,7 @@ async def open_spofity_func(callback: CallbackQuery):
     global client
     if client:
         try:
-            await callback.message.answer('Steam успешно открыт!')
+            await callback.message.answer('Facebook успешно открыт!')
             client.send('facebook'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
@@ -643,7 +643,7 @@ async def open_spofity_func(callback: CallbackQuery):
     global client
     if client:
         try:
-            await callback.message.answer('Steam успешно открыт!')
+            await callback.message.answer('Twitter успешно открыт!')
             client.send('twitter'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
@@ -659,7 +659,7 @@ async def open_spofity_func(callback: CallbackQuery):
     global client
     if client:
         try:
-            await callback.message.answer('Steam успешно открыт!')
+            await callback.message.answer('Instagram успешно открыт!')
             client.send('instagram'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
@@ -675,9 +675,10 @@ async def open_spofity_func(callback: CallbackQuery):
     global client
     if client:
         try:
-            await callback.message.answer('Steam успешно открыт!')
+            await callback.message.answer('Whatsapp успешно открыт!')
             client.send('whatsapp'.encode())
         except Exception as e:
             await callback.message.answer(f'Ошибка при отправке сообщения: {e}')
     else:
         await callback.message.answer('Сначала подключитесь к серверу с помощью команды кнопки "🔛 Подключиться к 🖥️".')
+
