@@ -10,25 +10,16 @@ from config.get_token import TOKEN
 
 async def main():
     bot = Bot(token=TOKEN)
-
     dp = Dispatcher()
-
     dp.include_router(router)
-
     logging.basicConfig(level=logging.INFO)
-
-    await dp.start_polling(bot)
-
+    await dp.start_polling(bot, skip_updates=True)
     await bot.set_my_commands(commands=commands, scope=BotCommandScopeAllPrivateChats())
 
+
 if __name__ == "__main__":
-
     try:
-
         createTable()
-
         asyncio.run(main())
-
     except KeyboardInterrupt:
-
         print('exit()')
