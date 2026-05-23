@@ -27,7 +27,7 @@ from socket_server.actions.youtube import toggle_youtube_video
 tasks = []
 address = ['', '', '']
 host = '0.0.0.0'
-port = 5010
+port = 5011
 
 
 async def send_email(message):
