@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.DS_Store
 
 # C extensions
 *.so
@@ -153,6 +154,19 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Socket server generated media
+socket_server/runtime/*
+!socket_server/runtime/.gitkeep
+!socket_server/runtime/photos/
+!socket_server/runtime/screenshots/
+!socket_server/runtime/video/
+socket_server/runtime/photos/*
+socket_server/runtime/screenshots/*
+socket_server/runtime/video/*
+!socket_server/runtime/photos/.gitkeep
+!socket_server/runtime/screenshots/.gitkeep
+!socket_server/runtime/video/.gitkeep
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

